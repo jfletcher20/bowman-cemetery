@@ -1,5 +1,5 @@
 # Cemetery-BowmanND
-UPDATE: Site is now online at: http://cemeterybowmannd.com/
+UPDATE: Site is now online at: http://cemeterybowmannd.com/  
 Website to search the cemetery for a grave and easily find where it's located.
 
 The design is just an HTML skeleton, pretty much. Just needed something functional for the prototype to show grandpa.
