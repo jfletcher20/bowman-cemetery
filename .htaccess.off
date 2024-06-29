@@ -1,0 +1,14 @@
+#BUILDER-START#
+# Enable rewriting.
+RewriteEngine on
+Header add Vary "User-Agent"
+Header add X-Generated "%t"
+Options -Indexes
+Options +FollowSymLinks
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^$ index.html
+RewriteRule ^([^/]+)/([^/]+)/?.*$ $1_$2.html
+RewriteRule ^([^/]+)/$ $1.html
+RewriteRule ^([\w_-]+)$ $1.html
+#BUILDER-END#
