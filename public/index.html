@@ -1,89 +1,52 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
-
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/10.12.2/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/10.12.2/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bowman Cemetery</title>
+    <link rel="stylesheet" href="./styles/map-styles.css">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+</head>
+<body class="center">
+    <!--<h1 class="center margin-top-large margin-bottom-large">Bowman Cemetery</h1>-->
+    <div class="center">
+        <img src="./pictures/VietnamWall.png" height="450" width=1150 alt="Picture of the Vietnam Wall wih site title Bowman Cemetery">
     </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
-  </body>
+    <form autocomplete="off" class="center margin-top-large margin-center-auto">
+        <div class="autocomplete" style="width: 1000px;">
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <!-- search icon -->
+                <svg style="position: absolute; right: 4;" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" height="32" viewBox="0 0 128 128">
+                    <path fill="#fff" d="M108.9,108.9L108.9,108.9c-2.3,2.3-6.1,2.3-8.5,0L87.7,96.2c-2.3-2.3-2.3-6.1,0-8.5l0,0c2.3-2.3,6.1-2.3,8.5,0l12.7,12.7C111.2,102.8,111.2,106.6,108.9,108.9z"></path><path fill="#fff" d="M52.3 17.299999999999997A35 35 0 1 0 52.3 87.3A35 35 0 1 0 52.3 17.299999999999997Z" transform="rotate(-45.001 52.337 52.338)"></path><path fill="#fff" d="M52.3 17.299999999999997A35 35 0 1 0 52.3 87.3A35 35 0 1 0 52.3 17.299999999999997Z" transform="rotate(-45.001 52.337 52.338)"></path><path fill="#71c2ff" d="M52.3 84.3c-1.7 0-3-1.3-3-3s1.3-3 3-3c6.9 0 13.5-2.7 18.4-7.6 6.4-6.4 9-15.5 6.9-24.4-.4-1.6.6-3.2 2.2-3.6 1.6-.4 3.2.6 3.6 2.2C86 55.8 82.9 67.1 75 75 68.9 81 60.9 84.3 52.3 84.3zM73 35c-.8 0-1.5-.3-2.1-.9L70.7 34c-1.2-1.2-1.2-3.1 0-4.2 1.2-1.2 3.1-1.2 4.2 0l.2.2c1.2 1.2 1.2 3.1 0 4.2C74.5 34.7 73.8 35 73 35z"></path><path fill="#444b54" d="M52.3 90.3c-9.7 0-19.5-3.7-26.9-11.1-14.8-14.8-14.8-38.9 0-53.7 14.8-14.8 38.9-14.8 53.7 0h0C94 40.3 94 64.4 79.2 79.2 71.8 86.6 62.1 90.3 52.3 90.3zM52.3 20.4c-8.2 0-16.4 3.1-22.6 9.4-12.5 12.5-12.5 32.8 0 45.3C42.2 87.4 62.5 87.4 75 75c12.5-12.5 12.5-32.8 0-45.3C68.7 23.5 60.5 20.4 52.3 20.4zM111 98.3L98.3 85.6c-1.7-1.7-4-2.6-6.4-2.6-1.4 0-2.7.3-3.9.9l-2.5-2.5c-1.2-1.2-3.1-1.2-4.2 0-1.2 1.2-1.2 3.1 0 4.2l2.5 2.5c-.6 1.2-.9 2.5-.9 3.9 0 2.4.9 4.7 2.6 6.4L98.3 111c1.8 1.8 4.1 2.6 6.4 2.6s4.6-.9 6.4-2.6l0 0C114.5 107.5 114.5 101.8 111 98.3zM106.8 106.8c-1.2 1.2-3.1 1.2-4.2 0L89.8 94.1c-.6-.6-.9-1.3-.9-2.1s.3-1.6.9-2.1c.6-.6 1.3-.9 2.1-.9s1.6.3 2.1.9l12.7 12.7C108 103.7 108 105.6 106.8 106.8z"></path>
+                </svg>
+                <input id="searchbar" type="text" name="search" placeholder="Capitalize the first letter...">
+            </div>
+            <label for="searchbar">
+                Search for a name, date, year, war or branch of military.<br>
+                NOTE: Capitalization matters; the search is case-sensitive.<br>
+            </label>
+        </div>
+    </form>
+    <div id="container" class="margin-top-medium">
+        <div id="box" style="top: 0px; left: 0px;"></div>
+        <img id="map" src="./pictures/cemetery-map-grid.png" alt="Map of the Bowman, ND cemetery with a grid for all the graves.">
+    </div>
+    <div class="center">
+        <p class="margin-top-small">This site is dedicated to all the people who are buried in it, and to all their family and friends.</p>
+        <h2 class="margin-top-large">Location</h2>
+        <p class="margin-top-medium">The cemetery is to the west of town.</p>
+        <p class="margin-top-small" style="color: red;">NOTE: 706 W Divide, Bowman, ND. will <strong>not</strong> get you to the cemetery.</p>
+        <p class="margin-top-small">An address that will get you to the cemetery is: 410 US-85, Bowman, ND</p>
+        <p class="margin-top-small">Google Maps address: 5NNP+RF Bowman ND.</p>
+        <p class="margin-top-small">Global coordinates: 46.177802, -103.412020</p>
+        <h2 class="margin-top-large">Contact Us</h2>
+        <p class="margin-top-medium">This website was designed by an independent third party.</p>
+        <p class="margin-top-small">If you know of a person who is buried in the Bowman cemetery, but is not on our list, please let us know.</p>
+        <p class="margin-top-small">If you have any information or comments that you feel will be useful to us please submit it to us.</p>
+        <h3 class="margin-top-large">Dan Fletcher</h3>
+        <p class="margin-top-medium">I created this site so that people who wanted to find the grave of a loved one or friend could do so.</p>
+        <p class="margin-top-small">I went through the cemetery and marked down every grave and who is buried in it.</p>
+        <p class="margin-top-small margin-bottom-large"><strong>info@cemeterybowmannd.com</strong></p>
+    </div>
+    <script src="./scripts/map-search.js"></script>
+</body>
 </html>
