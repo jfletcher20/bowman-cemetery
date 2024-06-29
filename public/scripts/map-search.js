@@ -4,41 +4,125 @@ const map = document.getElementById("map");
 
 const searchBar = document.getElementById("searchbar");
 
-loadPage();
-
 var array = [[]];
 var data;
 
 var dontSort = [];
 var list = [];
 
-// var imgWidth = img.width, imgHeight = img.height;
-// console.log(imgWidth + "x" + imgHeight);
-// var imgX = img.x, imgY = img.y;
+var A1;
+var push;
+var unit;
+var smoothing;
 
-// var imgX = img.x, imgY = img.y;
-// console.log("x = " + imgX + "\ny = " + imgY);
+var startX, startY;
+
+window.addEventListener("DOMContentLoaded", async function () {
+  loadFile('./tables/database/tblPeople.txt');
+  loadPage();
+  await fetch(document.getElementById("map").src).then(_ => loadPage());
+});
+
+async function loadDatabaseToCsv() {
+
+  var data = await fetch('https://bowman-cemetery-default-rtdb.firebaseio.com/.json').then(response => response.json());
+
+  // Parse the JSON data
+  const jsonData = data;
+
+  // Check if 'people' array exists and has at least one person
+  if (!jsonData.database || !jsonData.database.people || jsonData.database.people.length === 0) {
+    console.error('No people found in the JSON data');
+    return;
+  }
+
+  // Extract column headers (attribute names) from the first person
+  const headers = Object.keys(jsonData.database.people[0]);
+
+  // Initialize CSV string with headers, joined by ";"
+  let csvString = headers.join(';') + '\n';
+
+  // Loop through each person and append their values to the CSV string
+  jsonData.database.people.forEach(person => {
+    const row = headers.map(header => person[header]).join(';');
+    csvString += row + '\n';
+  });
+
+  // console.log(csvString.trim());
+
+  return csvString.trim();
+}
 
 // on window resize, reset the box's position to 0 0 and then set it to the new position agaian
-window.addEventListener("resize", function() {
-  loadPage();
-});
+window.addEventListener("resize", loadPage);
+const xC = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+  'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+  'AA', 'BB', 'CC', 'DD', 'EE', 'FF', 'GG', 'HH', 'II', 'JJ', 'KK', 'LL', 'MM',
+  'NN', 'OO', 'PP', 'QQ', 'RR', 'SS', 'TT', 'UU', 'VV', 'WW', 'XX', 'YY', 'ZZ',
+  'AAA', 'BBB', 'CCC', 'DDD', 'EEE', 'FFF', 'GGG', 'HHH', 'III', 'JJJ', 'KKK', 'LLL', 'MMM',
+  'NNN', 'OOO'/*, 'PPP', 'QQQ', 'RRR', 'SSS', 'TTT', 'UUU', 'VVV', 'WWW', 'XXX', 'YYY', 'ZZZ'*/];
+
+const yC = [];
+
+for (let i = 1; i <= 75; i++) {
+  yC[i - 1] = i;
+}
+
+// get coordinate points from grid's dimensions
+function getCoordinates(x, y) {
+
+  // determine size of X axis
+  let size = xC.length;
+
+  // search xC array to determine X axis point
+  for (let i = 0; i < size; i++) {
+    if (xC[i] == x) {
+      x = i;
+      break;
+    }
+  }
+
+  // determine size of Y axis
+  size = yC.length;
+
+  // search yC array to determine Y axis point
+  for (let i = 0; i < size; i++) {
+    if (yC[i] == y) {
+      y = i;
+      break;
+    }
+  }
+
+  // return the dot coordinates
+  return [x, y];
+
+}
+
+// get X coordinate from a coordinate point value
+function getX(coordinate) {
+  return coordinate[0];
+}
+
+// get Y coordinate from a coordinate point value
+function getY(coordinate) {
+  return coordinate[1];
+}
 
 function loadPage() {
   // X and Y starting coordinates for the box
-  const A1 = [map.offsetLeft + 11.5, map.offsetTop + 36.25];
+  A1 = [map.offsetLeft + 11.5, map.offsetTop + 36.25];
   // amount to push by every iteration
-  const push = 16.588587;
+  push = 16.588587;
   // unit to push by every iteration - note: unit has to be same as box positioning unit
-  const unit = 'px';
+  unit = 'px';
   // measure by which to make the animation smooth - note: 0 means no smoothing
-  const smoothing = 1;
+  smoothing = 1;
   // time between function calls (FPS for box movement animation)
   // const ms = 1;
   // previous values: 0.1727275, 'in'
 
   // these variables are used as reference points for the box's current coordinates
-  let startX = 0, startY = 0;
+  startX = startY = 0;
 
   // move to specific pixel coordinates in reference to the image
   function position(object) {
@@ -50,175 +134,98 @@ function loadPage() {
 
   position(box);
 
-  const xC = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-            'AA', 'BB', 'CC', 'DD', 'EE', 'FF', 'GG', 'HH', 'II', 'JJ', 'KK', 'LL', 'MM',
-            'NN', 'OO', 'PP', 'QQ', 'RR', 'SS', 'TT', 'UU', 'VV', 'WW', 'XX', 'YY', 'ZZ',
-            'AAA', 'BBB', 'CCC', 'DDD', 'EEE', 'FFF', 'GGG', 'HHH', 'III', 'JJJ', 'KKK', 'LLL', 'MMM',
-            'NNN', 'OOO'/*, 'PPP', 'QQQ', 'RRR', 'SSS', 'TTT', 'UUU', 'VVV', 'WWW', 'XXX', 'YYY', 'ZZZ'*/];
-
-  const yC = [];
-
-  for(let i = 1; i <= 75; i++) {
-    yC[i - 1] = i;
-  }
-
-  // get coordinate points from grid's dimensions
-  function getCoordinates(x, y) {
-
-    // determine size of X axis
-    let size = xC.length;
-
-    // search xC array to determine X axis point
-    for(let i = 0; i < size; i++) {
-      if(xC[i] == x) {
-        x = i;
-        break;
-      }
-    }
-
-    // determine size of Y axis
-    size = yC.length;
-
-    // search yC array to determine Y axis point
-    for(let i = 0; i < size; i++) {
-      if(yC[i] == y) {
-        y = i;
-        break;
-      }
-    }
-
-    // return the dot coordinates
-    return [x, y];
-
-  }
-
-  // get X coordinate from a coordinate point value
-  function getX(coordinate) {
-    return coordinate[0];
-  }
-
-  // get Y coordinate from a coordinate point value
-  function getY(coordinate) {
-    return coordinate[1];
-  }
-
-  // move the box up by 1
-  function up() {
-    box.style.top = (parseFloat(box.style.top) - push / smoothing) + unit;
-  }
-
-  // move the box down by 1
-  function down() {
-    box.style.top = (parseFloat(box.style.top) + push / smoothing) + unit;
-  }
-
-  // move the box left by 1
-  function left() {
-    box.style.left = (parseFloat(box.style.left) - push / smoothing) + unit;
-  }
-
-  // move the box right by 1
-  function right() {
-    box.style.left = (parseFloat(box.style.left) + push / smoothing) + unit;
-  }
-
-  var animation = false;
-
-  // move along the Y axis
-  function moveY(y) {
-
-    /*
-    animation = false;
-
-    let animationTimer = setInterval(function() {
-      if (animation) { clearInterval(animationTimer); }
-      else {
-        if(startY > y) {
-          up();
-          startY -= 1 / smoothing;
-        } else if(startY < y) {
-          down();
-          startY += 1 / smoothing;
-        } else {
-          clearInterval(animationTimer);
-          animation = true;
-        }
-      }
-    }, ms);
-    */
-
-    // up border is 1, down border is 75
-    while(startY > y) {
-      up();
-      startY--;
-    }
-
-    while(startY < y) {
-      down();
-      startY++;
-    }
-
-  }
-
-  // move along the X axis
-  function moveX(x) {
-
-    /*
-    animation = false;
-
-    let animationTimer = setInterval(function() {
-      if (animation) { clearInterval(animationTimer); }
-      else {
-        if(startX < x) {
-          right();
-          startX += 1 / smoothing;
-        } else if(startX > x) {
-          left();
-          startX -= 1 / smoothing;
-        } else {
-          clearInterval(animationTimer);
-          animation = true;
-        }
-      }
-    }, ms);*/
-    
-    // left border is 1, right border is 67
-    while(startX < x) {
-      right();
-      startX++;
-    }
-
-    while(startX > x) {
-      left();
-      startX--;
-    }
-
-  }
-
-  // move along both axis via coordinate point value
-  function move(coordinates) {
-
-    lastMoveCallData = coordinates;
-
-    // move along both axis via coordinate point value
-    if(arguments.length == 1) {
-      moveX(getX(coordinates));
-      moveY(getY(coordinates));
-    }
-    
-    // move along both axis via X and Y values
-    else if(arguments.length == 2) {
-      moveX(arguments[0] - 1);
-      moveY(arguments[1] - 1);
-    }
-
-  }
-
-  if(lastMoveCallData != null) move(lastMoveCallData);
+  if (lastMoveCallData != null) move(lastMoveCallData);
 
   const myForm = document.getElementById("myForm");
   const csvFile = document.getElementById("csvFile");
+
+}
+
+
+// move the box up by 1
+function up() {
+  box.style.top = (parseFloat(box.style.top) - push / smoothing) + unit;
+}
+
+// move the box down by 1
+function down() {
+  box.style.top = (parseFloat(box.style.top) + push / smoothing) + unit;
+}
+
+// move the box left by 1
+function left() {
+  box.style.left = (parseFloat(box.style.left) - push / smoothing) + unit;
+}
+
+// move the box right by 1
+function right() {
+  box.style.left = (parseFloat(box.style.left) + push / smoothing) + unit;
+}
+
+function moveY(y) {
+  while (startY > y) {
+    up();
+    startY--;
+  }
+  while (startY < y) {
+    down();
+    startY++;
+  }
+}
+
+// move along the X axis
+function moveX(x) {
+  while (startX < x) {
+    right();
+    startX++;
+  }
+  while (startX > x) {
+    left();
+    startX--;
+  }
+}
+
+// move along both axis via coordinate point value
+function move(coordinates) {
+
+  lastMoveCallData = coordinates;
+
+  // move along both axis via coordinate point value
+  if (arguments.length == 1) {
+    moveX(getX(coordinates));
+    moveY(getY(coordinates));
+  }
+
+  // move along both axis via X and Y values
+  else if (arguments.length == 2) {
+    moveX(arguments[0] - 1);
+    moveY(arguments[1] - 1);
+  }
+
+}
+
+async function loadFile(url) {
+
+  // grab only data valuable to the user
+  function overrideList(arr) {
+    let newArray = [];
+    for (let i = 0; i < arr.length - 1; i++) {
+      newArray[i] = arr[i]["txtFirstName"];
+      if (arr[i]["txtFirstName"]) {
+        newArray[i] += " ";
+      }
+      if (arr[i]["txtMiddleName"]) {
+        newArray[i] += arr[i]["txtMiddleName"] + " ";
+      }
+      newArray[i] += arr[i]["txtLastName"] + " (" + arr[i]["dteBirth"] + " - " + arr[i]["dteDeath"] + ")";
+      if (arr[i]["txtBranchService"] || arr[i]["txtWar"]) { newArray[i] += " ["; }
+      if (arr[i]["txtBranchService"]) { newArray[i] += arr[i]["txtBranchService"]; }
+      if (arr[i]["txtBranchService"] && arr[i]["txtWar"]) { newArray[i] += " - "; }
+      if (arr[i]["txtWar"]) { newArray[i] += arr[i]["txtWar"]; }
+      if (arr[i]["txtBranchService"] || arr[i]["txtWar"]) { newArray[i] += "]"; }
+    }
+    return newArray;
+  }
 
   function csvToArray(str, delimiter = ",") {
 
@@ -253,21 +260,6 @@ function loadPage() {
 
   }
 
-  // search function for searching an array of strings for a string
-  function search(toSearch, criteria) {
-    // console.log(criteria);
-    // for each item in the array...
-    for (i = 0; i < toSearch.length; i++) {
-      // console.log(i + " >> " + toSearch[i] + " = " + criteria + " ?");
-      if (toSearch[i] === criteria) {
-        // console.log(i);
-        return i;
-      }
-    }
-    // console.log(-1);
-    return -1;
-  }
-
   // function to create autocomplete effect
   function autocomplete(inp, arr, nonSort) {
 
@@ -275,14 +267,14 @@ function loadPage() {
     // the text field element and an array of possible autocompleted values:
     var currentFocus;
     // execute a function when someone writes in the text field:
-    inp.addEventListener("input", function(e) {
+    inp.addEventListener("input", function (e) {
 
       var sectionContainer, a, b, i, val = this.value;
 
       // close any already open lists of autocompleted values
       closeAllLists();
 
-      if (!val) { return false;}
+      if (!val) { return false; }
       currentFocus = -1;
 
       // create a DIV element that will contain the items (values):
@@ -300,7 +292,7 @@ function loadPage() {
       // for each item in the array...
       for (i = 0; i < arr.length; i++) {
 
-        for(j = 0; j < arr[i].length; j++) {
+        for (j = 0; j < arr[i].length; j++) {
 
           // check if the item starts with the same letters as the text field value (add .toUpperCase() to both to remove casesensitivity):
           if (arr[i].substr(j, val.length) == val) {
@@ -310,29 +302,44 @@ function loadPage() {
             // create a DIV element for each matching element:
             b = document.createElement("a");
             b.setAttribute("href", "#box");
- 
+
             // bold all matches to current input value
             b.innerHTML = "<div class=\"text-hover\">" + arr[i].replaceAll(`${val}`, "<strong>" + val + "</strong>") + "</div>";
-            
+
             // insert a input field that will hold the current array item's value:
             b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
 
             let temp = i;
 
             // execute a function when someone clicks on the item value (DIV element):
-            b.addEventListener("click", function(e) {
+            b.addEventListener("click", function (e) {
 
               e.preventDefault();
 
               // insert the value for the autocomplete text field:
               inp.value = arr[temp];
 
+              // search function for searching an array of strings for a string
+              function search(toSearch, criteria) {
+                // console.log(criteria);
+                // for each item in the array...
+                for (i = 0; i < toSearch.length; i++) {
+                  // console.log(i + " >> " + toSearch[i] + " = " + criteria + " ?");
+                  if (toSearch[i] === criteria) {
+                    // console.log(i);
+                    return i;
+                  }
+                }
+                // console.log(-1);
+                return -1;
+              }
+
               let results = search(nonSort, inp.value);
 
               move(getCoordinates(array[results]["txtXAxes"], array[results]["txtYAxes"] - 25));
-              
+
               document.querySelector(this.getAttribute('href')).scrollIntoView({
-                  behavior: 'smooth'
+                behavior: 'smooth'
               });
 
               move(getCoordinates(array[results]["txtXAxes"], array[results]["txtYAxes"]));
@@ -348,13 +355,13 @@ function loadPage() {
           }
 
         }
-      
+
       }
 
     });
 
     // execute a function presses a key on the keyboard:
-    inp.addEventListener("keydown", function(e) {
+    inp.addEventListener("keydown", function (e) {
 
       var x = document.getElementById(this.id + "autocomplete-list");
 
@@ -421,51 +428,26 @@ function loadPage() {
 
     // execute a function when someone clicks in the document:
     document.addEventListener("click", function (e) {
-        closeAllLists(e.target);
+      closeAllLists(e.target);
     });
 
   }
 
-  async function loadFile(url) {
-    try {
-      // fetch data from given link; works with server file paths or files on the web
-      array = await fetch(url);
-      data = await array.text();
-      // console.log(data);
-      array = csvToArray(data, ";");
-      // loadList();
-      // load only the data that is useful to the user into the list for autocompletion
-      list = overrideList(array);
-      dontSort = overrideList(array);
-      // initiate the autocomplete function on the "myInput" element, and pass along the csv array as possible autocomplete values:
-      autocomplete(searchBar, list, dontSort);
-    } catch (err) {
-      console.error(err);
-    }
+  try {
+    // fetch data from given link; works with server file paths or files on the web
+    array = await loadDatabaseToCsv();
+    data = array;
+    // console.log(data);
+    array = csvToArray(data, ";");
+    // loadList();
+    // load only the data that is useful to the user into the list for autocompletion
+    list = overrideList(array);
+    dontSort = overrideList(array);
+    // initiate the autocomplete function on the "myInput" element, and pass along the csv array as possible autocomplete values:
+    autocomplete(searchBar, list, dontSort);
+  } catch (err) {
+    console.error(err);
   }
-
-  // grab only data valuable to the user
-  function overrideList(arr) {
-    let newArray = [];
-    for(let i = 0; i < arr.length - 1; i++) {
-        newArray[i] = arr[i]["txtFirstName"];
-        if(arr[i]["txtFirstName"]) {
-          newArray[i] += " ";
-        }
-        if(arr[i]["txtMiddleName"]) {
-          newArray[i] += arr[i]["txtMiddleName"] + " ";
-        }
-        newArray[i] += arr[i]["txtLastName"] + " (" + arr[i]["dteBirth"] + " - " + arr[i]["dteDeath"] + ")";
-        if(arr[i]["txtBranchService"] || arr[i]["txtWar"]) { newArray[i] += " ["; }
-        if(arr[i]["txtBranchService"]) { newArray[i] += arr[i]["txtBranchService"]; }
-        if(arr[i]["txtBranchService"] && arr[i]["txtWar"]) { newArray[i] += " - "; }
-        if(arr[i]["txtWar"]) { newArray[i] += arr[i]["txtWar"]; }
-        if(arr[i]["txtBranchService"] || arr[i]["txtWar"]) { newArray[i] += "]"; }
-    }
-    return newArray;
-  }
-
-  loadFile('../tables/database/tblPeople.txt');
 }
 
 var lastMoveCallData = null;

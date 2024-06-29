@@ -101,7 +101,7 @@ AutID;txtLastName;txtFirstName;txtMiddleName;dteBirth;dteDeath;txtBranchService;
 100;Bagley;Herman;;10/18/1906;1/1/1995;;;C;RR;25;0;
 101;Bagley;John;T.;1860;1935;;;N;BB;66;0;
 102;Bagley;Marion;L.;12/31/1927;10/23/2000;;;C;TT;32;0;
-103;Bagley;Mildred;;10/19/1913;1/15/2–5;;;C;RR;25;0;
+103;Bagley;Mildred;;10/19/1913;1/15/2005;;;C;RR;25;0;
 104;Bagley;Minnie;;1870;1958;;;N;CC;66;0;
 105;Bagley;Richard;A.;;;Army;WWII;L;N;50;0;
 106;Bagley;Walter;G.;1898;1974;;Korea;C;TT;31;0;
