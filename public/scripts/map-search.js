@@ -17,22 +17,47 @@ var smoothing;
 
 var startX, startY;
 
+// move to specific pixel coordinates in reference to the image
+function position(object) {
+  A1 = [map.offsetLeft + 11.5, map.offsetTop + 36.25];
+  object.style.left = A1[0] + unit;
+  object.style.top = A1[1] + unit;
+  startX = 0;
+  startY = 0;
+}
+
 window.addEventListener("DOMContentLoaded", async function () {
   loadFile('./tables/database/tblPeople.txt');
   loadPage();
   await fetch(document.getElementById("map").src).then(_ => loadPage());
 });
 
+const currentDate = `${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}`;
+
+async function getData() {
+  
+  if (localStorage.getItem(`database-${currentDate}`) != null && localStorage.getItem(`database-${currentDate}`) != undefined) {
+    return JSON.parse(localStorage.getItem(`database-${currentDate}`));
+  }
+  localStorage.clear();
+
+  return (await fetch('https://bowman-cemetery-default-rtdb.firebaseio.com/.json')).json();
+}
+
 async function loadDatabaseToCsv() {
 
-  var data = await fetch('https://bowman-cemetery-default-rtdb.firebaseio.com/.json').then(response => response.json());
+  // check if localstorage ("cache") already has data at the key 'database-{day-month-year}'
+  // if it does, then load data from there - otherwise fetch the data from the database
+  // this is to save data consumption for the server
+  var data = await getData();
+  localStorage.setItem(`database-${currentDate}`, JSON.stringify(data));
 
   // Parse the JSON data
   const jsonData = data;
 
   // Check if 'people' array exists and has at least one person
   if (!jsonData.database || !jsonData.database.people || jsonData.database.people.length === 0) {
-    console.error('No people found in the JSON data');
+    console.error(`No people found in the JSON data\n${jsonData.toString()}`);
     return;
   }
 
@@ -123,15 +148,6 @@ function loadPage() {
 
   // these variables are used as reference points for the box's current coordinates
   startX = startY = 0;
-
-  // move to specific pixel coordinates in reference to the image
-  function position(object) {
-    object.style.left = A1[0] + unit;
-    object.style.top = A1[1] + unit;
-    startX = 0;
-    startY = 0;
-  }
-
   position(box);
 
   if (lastMoveCallData != null) move(lastMoveCallData);
@@ -315,6 +331,7 @@ async function loadFile(url) {
 
               // insert the value for the autocomplete text field:
               inp.value = arr[temp];
+              position(box);
 
               // search function for searching an array of strings for a string
               function search(toSearch, criteria) {
