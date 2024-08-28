@@ -209,20 +209,17 @@ async function loadFile(url) {
   // grab only data valuable to the user
   function overrideList(arr) {
     let newArray = [];
-    for (let i = 0; i < arr.length - 1; i++) {
+    for (let i = 0; i < arr.length; i++) {
       newArray[i] = arr[i]["txtFirstName"];
-      if (arr[i]["txtFirstName"]) {
-        newArray[i] += " ";
-      }
-      if (arr[i]["txtMiddleName"]) {
-        newArray[i] += arr[i]["txtMiddleName"] + " ";
-      }
+      if (arr[i]["txtFirstName"]) newArray[i] += " ";
+      if (arr[i]["txtMiddleName"]) newArray[i] += arr[i]["txtMiddleName"] + " ";
       newArray[i] += arr[i]["txtLastName"] + " (" + arr[i]["dteBirth"] + " - " + arr[i]["dteDeath"] + ")";
-      if (arr[i]["txtBranchService"] || arr[i]["txtWar"]) { newArray[i] += " ["; }
-      if (arr[i]["txtBranchService"]) { newArray[i] += arr[i]["txtBranchService"]; }
-      if (arr[i]["txtBranchService"] && arr[i]["txtWar"]) { newArray[i] += " - "; }
-      if (arr[i]["txtWar"]) { newArray[i] += arr[i]["txtWar"]; }
-      if (arr[i]["txtBranchService"] || arr[i]["txtWar"]) { newArray[i] += "]"; }
+      if (arr[i]["txtBranchService"] || arr[i]["txtWar"]) newArray[i] += " [";
+      if (arr[i]["txtBranchService"]) newArray[i] += arr[i]["txtBranchService"];
+      if (arr[i]["txtBranchService"] && arr[i]["txtWar"]) newArray[i] += " - ";
+      if (arr[i]["txtWar"]) newArray[i] += arr[i]["txtWar"];
+      if (arr[i]["txtBranchService"] || arr[i]["txtWar"]) newArray[i] += "]";
+      newArray[i] += " (Grid coordinates: " + arr[i]["txtXAxes"] + " " + arr[i]["txtYAxes"] + ")";
     }
     return newArray;
   }
@@ -336,6 +333,9 @@ async function loadFile(url) {
 
               let results = search(nonSort, inp.value);
 
+              move(getCoordinates(array[results]["txtXAxes"], array[results]["txtYAxes"] - 25));
+              
+              document.getElementById('name-label').innerText = inp.value;
               move(getCoordinates(array[results]["txtXAxes"], array[results]["txtYAxes"] - 25));
 
               document.querySelector(this.getAttribute('href')).scrollIntoView({

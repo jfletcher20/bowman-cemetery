@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV to JSON Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>CSV to JSON Converter</h2>
+        <input type="file" id="csvFile" accept=".csv,.txt" />
+        <button onclick="convertCsvToJson()">Convert to JSON</button>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        function convertCsvToJson() {
+            const fileInput = document.getElementById('csvFile');
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            if (!file) {
+                alert("Please select a file.");
+                return;
+            }
+
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const lines = text.split('\n');
+                const headings = lines[0].trim().split(';');
+                const people = [];
+
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].trim().split(';');
+                    if (values.length === headings.length) {
+                        let person = {};
+                        for (let j = 0; j < headings.length; j++) {
+                            person[headings[j]] = values[j];
+                        }
+                        people.push(person);
+                    }
+                }
+
+                const database = {
+                    database: { people: people }
+                };
+
+                const jsonString = JSON.stringify(database, null, 4);
+                downloadJsonFile(jsonString, 'output-js.json');
+                document.getElementById('message').innerText = "JSON file generated successfully!";
+            };
+
+            reader.readAsText(file);
+        }
+
+        function downloadJsonFile(jsonString, filename) {
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

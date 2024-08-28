@@ -28,6 +28,16 @@ section {
 #container {
     position: relative;
 }
+
+#name-label {
+    margin-left: 14px;
+    padding: 1px 4px;
+    position: absolute;
+    top: -19px;
+    background-color: rgb(26, 227, 253);
+    font-weight: bolder;
+    // text-shadow: 0px 0px 2px black;
+}
   
 #box {
     position: absolute;
