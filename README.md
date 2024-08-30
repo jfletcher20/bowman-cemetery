@@ -10,3 +10,5 @@ I thought "It'd be a good learning experience" so I went ahead and did it myself
 IMPORTANT
 In order to actually run the website it needs to be on a server because of the use of fetch() in JavaScript.
 You can use Visual Studio Code's "Live Server" extension (which is completely free!) to run the site.
+
+Official document.

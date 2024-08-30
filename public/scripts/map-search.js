@@ -235,7 +235,7 @@ async function loadFile(url) {
       if (arr[i]["txtBranchService"] && arr[i]["txtWar"]) newArray[i] += " - ";
       if (arr[i]["txtWar"]) newArray[i] += arr[i]["txtWar"];
       if (arr[i]["txtBranchService"] || arr[i]["txtWar"]) newArray[i] += "]";
-      newArray[i] += " (Grid coordinates: " + arr[i]["txtXAxes"] + " " + arr[i]["txtYAxes"] + ")";
+      newArray[i] += " (Grid: " + arr[i]["txtXAxes"] + " " + arr[i]["txtYAxes"] + ")";
     }
     return newArray;
   }
