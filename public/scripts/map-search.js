@@ -50,7 +50,7 @@ async function loadDatabaseToCsv() {
   // if it does, then load data from there - otherwise fetch the data from the database
   // this is to save data consumption for the server
   var data = await getData();
-  localStorage.setItem(`database-${currentDate}`, JSON.stringify(data));
+  // localStorage.setItem(`database-${currentDate}`, JSON.stringify(data));
 
   // Parse the JSON data
   const jsonData = data;
@@ -62,7 +62,7 @@ async function loadDatabaseToCsv() {
   }
 
   // Extract column headers (attribute names) from the first person
-  const headers = Object.keys(jsonData.database.people[0]);
+  const headers = Object.keys(Object.values(jsonData.database.people).filter(person => person !== null && person !== undefined)[0]);
 
   // Initialize CSV string with headers, joined by ";"
   let csvString = headers.join(';') + '\n';
