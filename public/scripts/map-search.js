@@ -36,10 +36,10 @@ const currentDate = `${new Date().getDate()}-${new Date().getMonth() + 1}-${new 
 
 async function getData() {
   
-  if (localStorage.getItem(`database-${currentDate}`) != null && localStorage.getItem(`database-${currentDate}`) != undefined) {
-    return JSON.parse(localStorage.getItem(`database-${currentDate}`));
-  }
-  localStorage.clear();
+  // if (localStorage.getItem(`database-${currentDate}`) != null && localStorage.getItem(`database-${currentDate}`) != undefined) {
+  //   return JSON.parse(localStorage.getItem(`database-${currentDate}`));
+  // }
+  // localStorage.clear();
 
   return (await fetch('https://bowman-cemetery-default-rtdb.firebaseio.com/.json')).json();
 }
@@ -68,7 +68,7 @@ async function loadDatabaseToCsv() {
   let csvString = headers.join(';') + '\n';
 
   // Loop through each person and append their values to the CSV string
-  jsonData.database.people.forEach(person => {
+  jsonData.database.people.filter(person => person !== null && person !== undefined).forEach(person => {
     const row = headers.map(header => person[header]).join(';');
     csvString += row + '\n';
   });
