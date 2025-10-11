@@ -68,7 +68,7 @@ async function loadDatabaseToCsv() {
   let csvString = headers.join(';') + '\n';
 
   // Loop through each person and append their values to the CSV string
-  jsonData.database.people.filter(person => person !== null && person !== undefined).forEach(person => {
+  Object.values(jsonData.database.people).filter(person => person !== null && person !== undefined).forEach(person => {
     const row = headers.map(header => person[header]).join(';');
     csvString += row + '\n';
   });
