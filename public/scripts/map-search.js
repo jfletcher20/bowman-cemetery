@@ -35,7 +35,7 @@ window.addEventListener("DOMContentLoaded", async function () {
 const currentDate = `${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}`;
 
 async function getData() {
-  
+
   // if (localStorage.getItem(`database-${currentDate}`) != null && localStorage.getItem(`database-${currentDate}`) != undefined) {
   //   return JSON.parse(localStorage.getItem(`database-${currentDate}`));
   // }
@@ -303,75 +303,83 @@ async function loadFile(url) {
       arr.sort();
 
       // for each item in the array...
-      for (i = 0; i < arr.length; i++) {
+      for (let word in arr) {
+        word = arr[word];
+        function contains(string, other) {
+          return string.indexOf(other) !== -1;
+        }
 
-        for (j = 0; j < arr[i].length; j++) {
+        function containsAll(string, query) {
+          // split query into individual words
+          const words = query.split(' ');
+          // check if all words are present in the string
+          return words.every(word => contains(string.toLowerCase(), word.toLowerCase()));
+        }
 
-          // check if the item starts with the same letters as the text field value (add .toUpperCase() to both to remove casesensitivity):
-          if (arr[i].substr(j, val.length) == val) {
+        function everyWordUppercase(str) {
+          return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+        }
 
-            j = arr[i].length;
+        // check if the item starts with the same letters as the text field value (add .toUpperCase() to both to remove casesensitivity):
+        if (containsAll(word.toLowerCase(), val.toLowerCase())) {
 
-            // create a DIV element for each matching element:
-            b = document.createElement("a");
-            b.setAttribute("href", "#box");
+          // create a DIV element for each matching element:
+          b = document.createElement("a");
+          b.setAttribute("href", "#box");
 
-            // bold all matches to current input value
-            b.innerHTML = "<div class=\"text-hover\">" + arr[i].replaceAll(`${val}`, "<strong>" + val + "</strong>") + "</div>";
+          // bold all matches to current input value
+          b.innerHTML = "<div class=\"text-hover\">" + word + "</div>";
 
-            // insert a input field that will hold the current array item's value:
-            b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          // insert a hidden input field that will hold the current array item's value:
+          b.innerHTML += "<input type='hidden' value='" + word + "'>";
 
-            let temp = i;
+          // execute a function when someone clicks on the item value (DIV element):
+          b.addEventListener("click", function (e) {
 
-            // execute a function when someone clicks on the item value (DIV element):
-            b.addEventListener("click", function (e) {
+            e.preventDefault();
 
-              e.preventDefault();
+            // insert the value for the autocomplete text field:
+            inp.value = arr[temp];
+            position(box);
 
-              // insert the value for the autocomplete text field:
-              inp.value = arr[temp];
-              position(box);
-
-              // search function for searching an array of strings for a string
-              function search(toSearch, criteria) {
-                // console.log(criteria);
-                // for each item in the array...
-                for (i = 0; i < toSearch.length; i++) {
-                  // console.log(i + " >> " + toSearch[i] + " = " + criteria + " ?");
-                  if (toSearch[i] === criteria) {
-                    // console.log(i);
-                    return i;
-                  }
+            // search function for searching an array of strings for a string
+            function search(toSearch, criteria) {
+              // console.log(criteria);
+              // for each item in the array...
+              for (i = 0; i < toSearch.length; i++) {
+                // console.log(i + " >> " + toSearch[i] + " = " + criteria + " ?");
+                if (toSearch[i] === criteria) {
+                  // console.log(i);
+                  return i;
                 }
-                // console.log(-1);
-                return -1;
               }
+              // console.log(-1);
+              return -1;
+            }
 
-              let results = search(nonSort, inp.value);
+            let results = search(nonSort, inp.value);
 
-              move(getCoordinates(array[results]["txtXAxes"], array[results]["txtYAxes"] - 25));
-              
-              document.getElementById('name-label').innerText = inp.value;
-              move(getCoordinates(array[results]["txtXAxes"], array[results]["txtYAxes"] - 25));
+            move(getCoordinates(array[results]["txtXAxes"], array[results]["txtYAxes"] - 25));
 
-              document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-              });
+            document.getElementById('name-label').innerText = inp.value;
+            move(getCoordinates(array[results]["txtXAxes"], array[results]["txtYAxes"] - 25));
 
-              move(getCoordinates(array[results]["txtXAxes"], array[results]["txtYAxes"]));
-
-              // close the list of autocompleted values,
-              // (or any other open lists of autocompleted values:
-              closeAllLists();
-
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+              behavior: 'smooth'
             });
 
-            a.appendChild(b);
+            move(getCoordinates(array[results]["txtXAxes"], array[results]["txtYAxes"]));
 
-          }
+            // close the list of autocompleted values,
+            // (or any other open lists of autocompleted values:
+            closeAllLists();
+
+          });
+
+          a.appendChild(b);
 
         }
+
 
       }
 
