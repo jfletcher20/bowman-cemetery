@@ -206,6 +206,14 @@ function move(coordinates) {
 
   lastMoveCallData = coordinates;
 
+  if (coordinates[0] > 55 || getX(coordinates) > 55) {
+    document.querySelector('#name-label-right').hidden = true;
+    document.querySelector('#name-label-left').hidden = false;
+  } else {
+    document.querySelector('#name-label-right').hidden = false;
+    document.querySelector('#name-label-left').hidden = true;
+  }
+
   // move along both axis via coordinate point value
   if (arguments.length == 1) {
     moveX(getX(coordinates));
@@ -282,7 +290,7 @@ async function loadFile(url) {
     // execute a function when someone writes in the text field:
     inp.addEventListener("input", function (e) {
 
-      var sectionContainer, a, b, i, val = this.value;
+      var autocompleteList, option, val = this.value;
 
       // close any already open lists of autocompleted values
       closeAllLists();
@@ -291,13 +299,13 @@ async function loadFile(url) {
       currentFocus = -1;
 
       // create a DIV element that will contain the items (values):
-      a = document.createElement("DIV");
+      autocompleteList = document.createElement("DIV");
 
-      a.setAttribute("id", this.id + "autocomplete-list");
-      a.setAttribute("class", "autocomplete-items");
+      autocompleteList.setAttribute("id", this.id + "autocomplete-list");
+      autocompleteList.setAttribute("class", "autocomplete-items");
 
       // append the DIV element as a child of the autocomplete container:
-      this.parentNode.appendChild(a);
+      this.parentNode.appendChild(autocompleteList);
 
       // sort the array
       arr.sort();
@@ -316,44 +324,35 @@ async function loadFile(url) {
           return words.every(word => contains(string.toLowerCase(), word.toLowerCase()));
         }
 
-        function everyWordUppercase(str) {
-          return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-        }
-
         // check if the item starts with the same letters as the text field value (add .toUpperCase() to both to remove casesensitivity):
         if (containsAll(word.toLowerCase(), val.toLowerCase())) {
 
           // create a DIV element for each matching element:
-          b = document.createElement("a");
-          b.setAttribute("href", "#box");
+          option = document.createElement("a");
+          option.setAttribute("href", "#box");
 
           // bold all matches to current input value
-          b.innerHTML = "<div class=\"text-hover\">" + word + "</div>";
+          option.innerHTML = "<div class=\"text-hover\">" + word + "</div>";
 
           // insert a hidden input field that will hold the current array item's value:
-          b.innerHTML += "<input type='hidden' value='" + word + "'>";
+          option.innerHTML += "<input type='hidden' value='" + word + "'>";
 
           // execute a function when someone clicks on the item value (DIV element):
-          b.addEventListener("click", function (e) {
+          option.addEventListener("click", function (e) {
 
             e.preventDefault();
 
             // insert the value for the autocomplete text field:
-            inp.value = arr[temp];
+            inp.value = word;
             position(box);
 
             // search function for searching an array of strings for a string
             function search(toSearch, criteria) {
-              // console.log(criteria);
-              // for each item in the array...
-              for (i = 0; i < toSearch.length; i++) {
-                // console.log(i + " >> " + toSearch[i] + " = " + criteria + " ?");
+              for (let i = 0; i < toSearch.length; i++) {
                 if (toSearch[i] === criteria) {
-                  // console.log(i);
                   return i;
                 }
               }
-              // console.log(-1);
               return -1;
             }
 
@@ -361,7 +360,8 @@ async function loadFile(url) {
 
             move(getCoordinates(array[results]["txtXAxes"], array[results]["txtYAxes"] - 25));
 
-            document.getElementById('name-label').innerText = inp.value;
+            document.getElementById('name-label-right').innerText = inp.value;
+            document.getElementById('name-label-left').innerText = inp.value;
             move(getCoordinates(array[results]["txtXAxes"], array[results]["txtYAxes"] - 25));
 
             document.querySelector(this.getAttribute('href')).scrollIntoView({
@@ -376,7 +376,7 @@ async function loadFile(url) {
 
           });
 
-          a.appendChild(b);
+          autocompleteList.appendChild(option);
 
         }
 

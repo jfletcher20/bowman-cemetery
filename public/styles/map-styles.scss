@@ -3,30 +3,30 @@ a {
     &:link {
         color: rgb(0, 0, 0);
     }
+
     &:visited {
         color: rgb(0, 0, 0);
     }
+
     &:hover {
         color: maroon;
     }
+
     &:active {
         color: brown;
     }
+
     text-decoration: none;
     scroll-behavior: smooth;
 }
 
-勇 {
-    font-weight: bold;
-}
-
 section {
-  width: 100%;
-  height: 500px;
-  overflow-y: scroll;
-  border: 1px solid black;
-  font-size: 0; 
-  scroll-behavior: smooth;
+    width: 100%;
+    height: 500px;
+    overflow-y: scroll;
+    border: 1px solid black;
+    font-size: 0;
+    scroll-behavior: smooth;
 }
 
 #container {
@@ -34,15 +34,25 @@ section {
 }
 
 #name-label {
-    margin-left: 14px;
-    padding: 1px 4px;
-    position: absolute;
-    top: -19px;
-    background-color: rgb(26, 227, 253);
-    font-weight: bolder;
-    // text-shadow: 0px 0px 2px black;
+
+    &-right {
+        margin-left: 14px;
+        padding: 1px 4px;
+        position: absolute;
+        top: -21px;
+        background-color: rgb(26, 227, 253);
+        font-weight: bolder;
+    }
+
+    &-left {
+        translate: -72px -10px;
+        padding: 1px 4px;
+        position: absolute;
+        background-color: rgb(26, 227, 253);
+        font-weight: bolder;
+    }
 }
-  
+
 #box {
     position: absolute;
     width: 0.05in;
@@ -55,7 +65,9 @@ section {
 .text-hover:hover {
     transform: translateY(-3px);
     // font-size: 16px;
-    transition: /*font-size 150ms, */transform 150ms;
+    transition:
+        /*font-size 150ms, */
+        transform 150ms;
 }
 
 .center {
@@ -69,20 +81,25 @@ section {
         &-small {
             margin-top: 15px;
         }
+
         &-medium {
             margin-top: 30px;
         }
+
         &-large {
             margin-top: 60px;
         }
     }
+
     &-bottom {
         &-small {
             margin-bottom: 15px;
         }
+
         &-medium {
             margin-bottom: 30px;
         }
+
         &-large {
             margin-bottom: 60px;
         }
@@ -109,27 +126,27 @@ h3 {
 
 /* the container must be positioned relative:*/
 .autocomplete {
-  position: relative;
-  display: inline-block;
+    position: relative;
+    display: inline-block;
 }
 
 input {
-  border: 1px solid transparent;
-  background-color: #f1f1f1;
-  padding: 10px;
-  font-size: 16px;
+    border: 1px solid transparent;
+    background-color: #f1f1f1;
+    padding: 10px;
+    font-size: 16px;
 }
 
 input[type=text] {
-  background-color: #f1f1f1;
-  width: 100%;
+    background-color: #f1f1f1;
+    width: 100%;
 }
 
 input[type=submit] {
-  background-color: DodgerBlue;
-  text-align: center;
-  color: #fff;
-  cursor: pointer;
+    background-color: DodgerBlue;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
 }
 
 .autocomplete-items {
@@ -152,8 +169,8 @@ input[type=submit] {
 .autocomplete-items div {
     cursor: pointer;
     padding: 10px;
-    background-color: #fff; 
-    border-bottom: 1px solid #d4d4d4; 
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
 }
 
 /*when hovering an item:*/
@@ -163,6 +180,6 @@ input[type=submit] {
 
 /*when navigating through the items using the arrow keys:*/
 .autocomplete-active {
-  background-color: DodgerBlue !important; 
-  color: #ffffff; 
+    background-color: DodgerBlue !important;
+    color: #ffffff;
 }
