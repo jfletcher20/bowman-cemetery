@@ -476,3 +476,234 @@ async function loadFile(url) {
 }
 
 var lastMoveCallData = null;
+
+// Print functionality
+function positionPrintButton() {
+  const printButton = document.getElementById('print-button');
+  const map = document.getElementById('map');
+  
+  if (printButton && map) {
+    // Get map position and dimensions
+    const mapLeft = map.offsetLeft;
+    const mapTop = map.offsetTop;
+    const mapWidth = map.offsetWidth;
+    
+    // Get button width
+    const buttonWidth = printButton.offsetWidth;
+    
+    // Position button in upper right corner with 10px padding
+    printButton.style.left = (mapLeft + mapWidth - buttonWidth - 10) + 'px';
+    printButton.style.top = (mapTop + 10) + 'px';
+  }
+}
+
+function initializePrintButton() {
+  const printButton = document.getElementById('print-button');
+  const printDialog = document.getElementById('print-dialog');
+  const printYes = document.getElementById('print-yes');
+  const printNo = document.getElementById('print-no');
+  const veteransOnlyCheckbox = document.getElementById('veterans-only-checkbox');
+
+  // Position the button
+  positionPrintButton();
+  
+  // Reposition button on window resize
+  window.addEventListener('resize', positionPrintButton);
+
+  // Show dialog when print button is clicked
+  printButton.addEventListener('click', () => {
+    printDialog.style.display = 'block';
+  });
+
+  // Close dialog when No is clicked
+  printNo.addEventListener('click', () => {
+    printDialog.style.display = 'none';
+    veteransOnlyCheckbox.checked = false;
+  });
+
+  // Generate and print PDF when Yes is clicked
+  printYes.addEventListener('click', () => {
+    const veteransOnly = veteransOnlyCheckbox.checked;
+    printDialog.style.display = 'none';
+    veteransOnlyCheckbox.checked = false;
+    generateAndPrintPDF(veteransOnly);
+  });
+
+  // Close dialog when clicking outside of modal content
+  window.addEventListener('click', (event) => {
+    if (event.target === printDialog) {
+      printDialog.style.display = 'none';
+      veteransOnlyCheckbox.checked = false;
+    }
+  });
+}
+
+function generateAndPrintPDF(veteransOnly) {
+  // Filter and sort the data
+  let people = array.filter(person => person && person.txtFirstName);
+  
+  if (veteransOnly) {
+    // Filter for veterans only (those with branch of service or war info)
+    people = people.filter(person => 
+      person.txtBranchService || person.txtWar
+    );
+    
+    // Sort by Y coordinate for optimal pathing
+    people.sort((a, b) => {
+      const yA = parseInt(a.txtYAxes) || 0;
+      const yB = parseInt(b.txtYAxes) || 0;
+      return yA - yB;
+    });
+  } else {
+    // Sort alphabetically by last name, or first name if no last name
+    people.sort((a, b) => {
+      const nameA = (a.txtLastName || a.txtFirstName || '').toLowerCase();
+      const nameB = (b.txtLastName || b.txtFirstName || '').toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+  }
+
+  // Create print content
+  createPrintContent(people, veteransOnly);
+  
+  // Trigger print dialog
+  setTimeout(() => {
+    window.print();
+    removePrintContent();
+  }, 100);
+}
+
+function createPrintContent(people, veteransOnly) {
+  // Remove any existing print content
+  removePrintContent();
+  
+  // Create container for print content
+  const printContainer = document.createElement('div');
+  printContainer.id = 'print-content';
+  printContainer.style.display = 'none';
+  
+  // Add title and subtitle
+  const title = document.createElement('h1');
+  title.textContent = 'Bowman Cemetery';
+  title.style.textAlign = 'center';
+  title.style.fontSize = '36pt';
+  title.style.marginBottom = '10px';
+  title.style.color = '#000';
+  printContainer.appendChild(title);
+  
+  const subtitle = document.createElement('h2');
+  subtitle.textContent = 'North Dakota';
+  subtitle.style.textAlign = 'center';
+  subtitle.style.fontSize = '24pt';
+  subtitle.style.marginBottom = '30px';
+  subtitle.style.color = '#000';
+  printContainer.appendChild(subtitle);
+  
+  if (veteransOnly) {
+    const note = document.createElement('p');
+    note.textContent = 'Veterans Only - Sorted by Proximity';
+    note.style.textAlign = 'center';
+    note.style.fontSize = '14pt';
+    note.style.marginBottom = '20px';
+    note.style.fontStyle = 'italic';
+    printContainer.appendChild(note);
+  }
+  
+  // Create table
+  const table = document.createElement('table');
+  table.style.width = '100%';
+  table.style.borderCollapse = 'collapse';
+  table.style.fontSize = '11pt';
+  
+  // Create table rows
+  people.forEach((person, index) => {
+    // Add empty row every 5 people
+    if (index > 0 && index % 5 === 0) {
+      const emptyRow = document.createElement('tr');
+      emptyRow.style.height = '15px';
+      table.appendChild(emptyRow);
+    }
+    
+    const row = document.createElement('tr');
+    
+    // Alternating background colors
+    if (Math.floor(index / 5) % 2 === 0) {
+      row.style.backgroundColor = '#ffffff';
+    } else {
+      row.style.backgroundColor = '#f0f0f0';
+    }
+    
+    // Index cell
+    const indexCell = document.createElement('td');
+    indexCell.textContent = (index + 1).toString();
+    indexCell.style.padding = '8px 5px';
+    indexCell.style.width = '5%';
+    indexCell.style.fontWeight = 'bold';
+    row.appendChild(indexCell);
+    
+    // Name cell
+    const nameCell = document.createElement('td');
+    let fullName = '';
+    if (person.txtFirstName) fullName += person.txtFirstName + ' ';
+    if (person.txtMiddleName) fullName += person.txtMiddleName + ' ';
+    if (person.txtLastName) fullName += person.txtLastName;
+    nameCell.textContent = fullName.trim();
+    nameCell.style.padding = '8px 5px';
+    nameCell.style.width = '25%';
+    row.appendChild(nameCell);
+    
+    // Branch of service cell
+    const branchCell = document.createElement('td');
+    branchCell.textContent = person.txtBranchService || '';
+    branchCell.style.padding = '8px 5px';
+    branchCell.style.width = '20%';
+    row.appendChild(branchCell);
+    
+    // War cell
+    const warCell = document.createElement('td');
+    warCell.textContent = person.txtWar || '';
+    warCell.style.padding = '8px 5px';
+    warCell.style.width = '20%';
+    row.appendChild(warCell);
+    
+    // Birth-Death cell
+    const datesCell = document.createElement('td');
+    let dates = '';
+    if (person.dteBirth) dates += person.dteBirth;
+    if (person.dteBirth && person.dteDeath) dates += ' - ';
+    if (person.dteDeath) dates += person.dteDeath;
+    datesCell.textContent = dates;
+    datesCell.style.padding = '8px 5px';
+    datesCell.style.width = '20%';
+    row.appendChild(datesCell);
+    
+    // Coordinates cell
+    const coordCell = document.createElement('td');
+    let coordinates = '';
+    if (person.txtXAxes) coordinates += person.txtXAxes;
+    if (person.txtXAxes && person.txtYAxes) coordinates += ' ';
+    if (person.txtYAxes) coordinates += person.txtYAxes;
+    coordCell.textContent = coordinates;
+    coordCell.style.padding = '8px 5px';
+    coordCell.style.width = '10%';
+    row.appendChild(coordCell);
+    
+    table.appendChild(row);
+  });
+  
+  printContainer.appendChild(table);
+  document.body.appendChild(printContainer);
+  
+  // Show print content for printing
+  printContainer.style.display = 'block';
+}
+
+function removePrintContent() {
+  const existingPrintContent = document.getElementById('print-content');
+  if (existingPrintContent) {
+    existingPrintContent.remove();
+  }
+}
+
+// Initialize print button when page loads
+window.addEventListener('load', initializePrintButton);

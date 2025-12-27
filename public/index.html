@@ -52,6 +52,25 @@
             <p id="name-label-right">Nobody has been searched for yet!</p>
         </div>
         <img id="map" src="./pictures/cemetery-map-grid.png">
+        <button id="print-button" class="print-btn">Print List</button>
+    </div>
+    
+    <!-- Print Dialog Modal -->
+    <div id="print-dialog" class="modal">
+        <div class="modal-content">
+            <h2>Print Cemetery List</h2>
+            <p>Would you like to print a list of the people in the cemetery?</p>
+            <div class="checkbox-container">
+                <label>
+                    <input type="checkbox" id="veterans-only-checkbox">
+                    Only veterans
+                </label>
+            </div>
+            <div class="button-container">
+                <button id="print-yes" class="modal-btn yes-btn">Yes</button>
+                <button id="print-no" class="modal-btn no-btn">No</button>
+            </div>
+        </div>
     </div>
     <div class="center">
         <p class="margin-top-small">This site is dedicated to all the people who are buried in it, and to all their
